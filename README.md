@@ -1,5 +1,5 @@
 # Password_Manager
-This is a Password Manager with a CLI interface that is created with Python. It uses security techniques like salts, hashing and encryption keys. All passwords are stored in an SQLite database
+This is a Password Manager with a CLI interface that is created with Python. It uses security techniques like salts, hashing and encryption keys. All passwords are stored in an SQLite database.
 
 ## How it works
     1. Prompts user for master password or to create one for first time users. 
