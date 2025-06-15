@@ -1,9 +1,14 @@
 import json
 from auth import encrypt,decrypt
 
-#TODO add checks for empty file and if hash doesn't exist
-with open('auth.json','r') as file:
-    data = json.load(file)
+try:
+    with open('auth.json','r') as file:
+        data = json.load(file)
+except FileExistsError:
+    print("auth.json not found, please contact support")
+
+if not 'hash' in data:
+    raise Exception("hash field not found, please contact support")
 
 password = ""
 if data["hash"] != '':

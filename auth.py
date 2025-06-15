@@ -8,19 +8,28 @@ class Authentication:
         salt = bcrypt.gensalt()
         bytes = password.encode("utf-8")
         hash = bcrypt.hashpw(bytes,salt)
-        with open("auth.json","r") as existing_file:
-            data = json.load(existing_file)
+        try:
+            with open("auth.json","r") as existing_file:
+                data = json.load(existing_file)
+        except Exception as e:
+            print(f"an unexpected error has occured:,{e}")
 
         data["hash"] = hash
         data["salt"] = salt
 
-        with open("auth.json",'w') as updated_file:
-            json.dumps(existing_file,updated_file,indent=4)
+        try:
+            with open("auth.json","r") as existing_file:
+                data = json.load(existing_file)
+        except Exception as e:
+            print(f"an unexpected error has occured:,{e}")
     
     def decrypt(password):
         bytes = password.encode("utf-8")
-        with open("auth.json","r") as file:
-            data = json.load(file)
+        try:
+            with open("auth.json","r") as existing_file:
+                data = json.load(existing_file)
+        except Exception as e:
+            print(f"an unexpected error has occured:,{e}")
 
         hash = data['hash']
         salt = data['salt']
