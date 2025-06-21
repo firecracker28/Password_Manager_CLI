@@ -1,5 +1,7 @@
 import json
-from auth import encrypt,decrypt
+from auth import login,createLogin
+from database import createVault
+import argparse
 
 try:
     with open('auth.json','r') as file:
@@ -11,11 +13,14 @@ if not 'hash' in data:
     raise Exception("hash field not found, please contact support")
 
 password = ""
-if data["hash"] != '':
-    password = input("Please enter the master password")
-    access_granted = decrypt(password)
-    if( not access_granted):
-        print("Authentication failed please try again")
-else:
+if data["hash"] == '':
     password = input("Please create your master password")
-    encrypt(password)
+    createLogin(password)
+password = input("Please create your master password")
+access_granted = login(password)
+if( not access_granted):
+    print("Authentication failed please try again")
+
+createVault()
+ #TODO create arg parser
+

@@ -4,7 +4,7 @@ import json
 #TODO add checks for all json read and writes
 class Authentication:
     #creates hash for first time users
-    def encrypt(password):
+    def createLogin(password):
         salt = bcrypt.gensalt()
         bytes = password.encode("utf-8")
         hash = bcrypt.hashpw(bytes,salt)
@@ -23,7 +23,7 @@ class Authentication:
         except Exception as e:
             print(f"an unexpected error has occured:,{e}")
     
-    def decrypt(password):
+    def login(password):
         bytes = password.encode("utf-8")
         try:
             with open("auth.json","r") as existing_file:
