@@ -22,4 +22,21 @@ def createVault():
     conn.close()
     print("Database closed")
 
+def newEntry(service,password,username,notes):
+    pass
+
+def remove(service):
+    pass
+
+def change (service):
+    pass
+
+def peek (service):
+    pass
+
+def create():
+    pass
+
+def find(service):
+    pass
     
