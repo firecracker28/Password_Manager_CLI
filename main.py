@@ -7,13 +7,8 @@ import sys
  #TODO create arg parser
 parser = argparse.ArgumentParser(prog ='main',allow_abbrev=False)
 # Allows user only one action per session
-actions = parser.add_mutually_exclusive_group('Actions:',required=True)
-actions.add_argument('-a','add')
-actions.add_argument('-d','delete')
-actions.add_argument('-m', 'modify')
-actions.add_argument('-s', 'search')
-actions.add_argument('-v','view')
-actions.add_argument('-g', 'generate')
+actions = parser.add_mutually_exclusive_group(required=True)
+actions.add_argument('-a')
 parser.add_argument('--service')
 parser.add_argument('--password')
 parser.add_argument('--username')
@@ -22,10 +17,11 @@ parser.add_argument('--notes')
 args = parser.parse_args()
 # checks prerequsites
 try:
-    with open('auth.json','r') as file:
+    with open('config/auth.json','r') as file:
         data = json.load(file)
-except FileExistsError:
+except FileNotFoundError:
     print("auth.json not found, please contact support")
+    sys.exit()
 
 if not 'hash' in data:
     raise Exception("hash field not found, please contact support")
@@ -44,19 +40,19 @@ if( not access_granted):
 #creates table if not already created
 createVault()
 
-if args.add is not None:
+if args.a == 'add':
     newEntry(args.service,args.password,args.username,args.notes)
-elif args.delete is not None:
+elif args.delete == 'delete':
     remove(args.service)
-elif args.modify is not None:
+elif args.modify == 'modify':
     change(args.service)
-elif args.search is not None:
+elif args.search == 'search':
     find(args.service)
-elif args.view is not None:
+elif args.view == 'view':
     peek(args.service)
-elif args.generate is not None:
+elif args.generate == 'generate':
     create()
 else:
-    print("No valid arguments given, please try again")
+    print("Action given is not a valid action. Please try again")
     sys.exit()
 
