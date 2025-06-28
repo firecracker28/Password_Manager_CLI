@@ -28,3 +28,10 @@ def login(password):
         return True
     else:
         return False
+    
+def createKey(password):
+    with open("config/auth.json") as file:
+        data = json.load(file)
+    salt = data['salt'].encode("utf-8")
+    bytes = password.encode("utf-8")
+    return bcrypt.hashpw(bytes,salt=salt).decode("utf-8")
