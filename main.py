@@ -1,5 +1,5 @@
 import json
-from auth import login,createLogin
+from auth import login,createLogin,createKey
 import argparse
 import sys
 import pandas as pd
@@ -42,7 +42,7 @@ else:
     manager = cp.read_encrypted(path ='vault/vault.crypt',password=input("Please re-enter password to un-encrypt vault"))
 
 if args.a == 'add':
-    newColumn = pd.DataFrame({'Service':[args.service],'Username':[args.username],'Password':[args.password],'Notes':[args.notes]})
+    newColumn = pd.DataFrame({'Service':[args.service],'Username':[args.username],'Password':[createKey(args.password)],'Notes':[args.notes]})
     manager = pd.concat([manager,newColumn], ignore_index=True)
     cp.to_encrypted(manager,password=input("please re-enter your password to encrypt vault:"),path = 'vault/vault.crypt')
 elif args.a == 'delete':
