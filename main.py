@@ -1,9 +1,9 @@
 import json
 from auth import login,createLogin
-from database import createVault,newEntry,remove,change,peek,find,create
 import argparse
 import sys
-import os
+import pandas as pd
+import cryptpandas as cp
 
  #TODO create arg parser
 parser = argparse.ArgumentParser(prog ='main',allow_abbrev=False)
@@ -33,27 +33,28 @@ if not 'hash' in data:
 #Determines if user is returning or new
 if data["hash"] == '':
     createLogin(input("Please create your master password: "))
-
-access_granted = login(input("Please enter your master password: "))
-if( not access_granted):
-    print("Authentication failed please try again")
-    sys.exit()
-
-#creates table if not already created
-createVault()
+    manager = pd.DataFrame(columns=['Service','Username','Password','Notes'])
+else:
+    access_granted = login(input("Please enter your master password: "))
+    if( not access_granted):
+        print("Authentication failed please try again")
+        sys.exit()
+    manager = cp.read_encrypted(path ='vault/vault.crypt',password=input("Please re-enter password to un-encrypt vault"))
 
 if args.a == 'add':
-    newEntry(args.service,args.password,args.username,args.notes) 
+    newColumn = pd.DataFrame({'Service':[args.service],'Username':[args.username],'Password':[args.password],'Notes':[args.notes]})
+    manager = pd.concat([manager,newColumn], ignore_index=True)
+    cp.to_encrypted(manager,password=input("please re-enter your password to encrypt vault:"),path = 'vault/vault.crypt')
 elif args.a == 'delete':
-    remove(args.service)
+    pass
 elif args.a== 'modify':
-    change(args.service)
+    pass
 elif args.a == 'search':
-    find(args.service)
+    pass
 elif args.a == 'view':
-    peek(args.service)
+    pass
 elif args.a == 'generate':
-    create()
+    pass
 else:
     print("Action given is not a valid action. Please try again")
     sys.exit()
