@@ -1,5 +1,7 @@
 import bcrypt
 import json
+import sys
+import random
 
     #creates hash for first time users
 def createLogin(password):
@@ -30,8 +32,17 @@ def login(password):
         return False
     
 def createKey(password):
-    with open("config/auth.json") as file:
-        data = json.load(file)
-    salt = data['salt'].encode("utf-8")
+    salt = bcrypt.gensalt()
     bytes = password.encode("utf-8")
-    return bcrypt.hashpw(bytes,salt=salt).decode("utf-8")
+    return bcrypt.hashpw(bytes,salt=salt)
+
+def genPassword(length):
+    if length < 1 :
+        print("Invalid password length")
+        sys.exit()
+    password = ''
+    while(length > 0):
+        rand_int = random.randint(33,125)
+        password = password + chr(rand_int)
+        length = length - 1
+    return password

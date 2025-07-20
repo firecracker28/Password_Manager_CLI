@@ -1,9 +1,11 @@
 import json
-from auth import login,createLogin,createKey
+from auth import login,createLogin,createKey,genPassword
 import argparse
 import sys
 import pandas as pd
 import cryptpandas as cp
+import random
+from getpass import getpass
 
  #TODO create arg parser
 parser = argparse.ArgumentParser(prog ='main',allow_abbrev=False)
@@ -32,30 +34,59 @@ if not 'hash' in data:
 
 #Determines if user is returning or new
 if data["hash"] == '':
-    createLogin(input("Please create your master password: "))
+    createLogin(getpass("Please create your master password: "))
+    password = getpass("Please re-enter password to confirm: ")
     manager = pd.DataFrame(columns=['Service','Username','Password','Notes'])
 else:
-    access_granted = login(input("Please enter your master password: "))
-    if( not access_granted):
+    password = getpass("Please enter your master password: ")
+    if( not login(password)):
         print("Authentication failed please try again")
         sys.exit()
-    manager = cp.read_encrypted(path ='vault/vault.crypt',password=input("Please re-enter password to un-encrypt vault"))
+    manager = cp.read_encrypted(path ='vault/vault.crypt',password=password)
 
 if args.a == 'add':
     newColumn = pd.DataFrame({'Service':[args.service],'Username':[args.username],'Password':[createKey(args.password)],'Notes':[args.notes]})
     manager = pd.concat([manager,newColumn], ignore_index=True)
-    cp.to_encrypted(manager,password=input("please re-enter your password to encrypt vault:"),path = 'vault/vault.crypt')
+    cp.to_encrypted(manager,password=password,path = 'vault/vault.crypt')
 elif args.a == 'delete':
-    pass
+    print(manager)
+    if args.service is not None:
+        del_index = manager.index[manager['Service'] == args.service].to_list()
+        manager = manager.drop(del_index[0])
+    else:
+        print("Please specify service of the password you wish to delete")
+    cp.to_encrypted(manager,password=password,path = 'vault/vault.crypt')
+    print(manager)
 elif args.a== 'modify':
-    pass
+    if args.service is not None:
+        mod_index = manager.index[manager['Service'] == args.service].to_list()
+        if args.password is not None:
+            manager.at[mod_index[0],createKey(args.password)]
+        if args.username is not None:
+            manager.at[mod_index[0],args.username]
+        if args.notes is not None:
+            manager.at[mod_index[0],args.notes]
+    else:
+        print("Please specify which service for which you wish to modify")
+    cp.to_encrypted(manager,password=password,path = 'vault/vault.crypt')
 elif args.a == 'search':
     pass
 elif args.a == 'view':
     pass
 elif args.a == 'generate':
-    pass
+    length = input("How long would you like your password to be: ")
+    if length < 1 :
+        print("Invalid password length")
+        sys.exit()
+    password = ''
+    while(length > 0):
+        rand_int = random.randint(33,125)
+        password = password + chr(rand_int)
+        length = length - 1
+    print(password)
 else:
     print("Action given is not a valid action. Please try again")
     sys.exit()
+password = None
+del password
 
