@@ -18,7 +18,7 @@ This is a Password Manager with a CLI interface that is created with Python. It 
 ## 🔨 Features to Add
     1. Allow user to complete multiple actions in one session.
     2. Build a more interactive UI.
-    3. General improvements.
+    3. I am also open to any suggestions.
 
 ## ⚠️ Disclamer
     This project was purely created as a way for me to show my learning. Please do not use this to store senstive information.
