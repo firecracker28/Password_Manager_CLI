@@ -72,7 +72,6 @@ elif args.a == 'modify':
             print("entry not found,please try again")
     else:
             print("Please specify which service for which you wish to modify")
-    cp.to_encrypted(manager,password=password,path = 'vault/vault.crypt')
 elif args.a == 'search':
     row_retrevied = manager.index[manager['Service'] == args.service].to_list()
     if row_retrevied:
@@ -101,7 +100,7 @@ elif args.a == 'generate':
     print(password)
 else:
     print("Action given is not a valid action. Please try again")
-    sys.exit()
+cp.to_encrypted(manager,password=password,path = 'vault/vault.crypt')
 password = None
 del password
 
