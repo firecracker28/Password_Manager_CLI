@@ -2,6 +2,7 @@ import bcrypt
 import json
 import sys
 import random
+from cryptography.fernet import Fernet
 
     #creates hash for first time users
 def createLogin(password):
@@ -32,10 +33,21 @@ def login(password):
         return False
     
 def createKey(password):
-    salt = bcrypt.gensalt()
-    bytes = password.encode("utf-8")
-    return bcrypt.hashpw(bytes,salt=salt)
+    with open("config/auth.json","r") as existing_file:
+        data = json.load(existing_file)
 
+    if data['key'] == '':
+        key = Fernet.generate_key()
+        cipher = Fernet(key)
+        encrypted = cipher.encrypt(password.encode())
+        data['key'] = key.decode("utf-8")
+        with open("config/auth.json","w") as existing_file:
+            json.dump(data,existing_file,indent=4)
+    else:
+        cipher = Fernet(data['key'].encode())
+        encrypted = cipher.encrypt(password.encode())
+    
+    return encrypted
 def genPassword(length):
     if length < 1 :
         print("Invalid password length")

@@ -1,11 +1,12 @@
 import json
-from auth import login,createLogin,createKey,genPassword
+from auth import login,createLogin,createKey
 import argparse
 import sys
 import pandas as pd
 import cryptpandas as cp
 import random
 from getpass import getpass
+from cryptography.fernet import Fernet
 
  #TODO create arg parser
 parser = argparse.ArgumentParser(prog ='main',allow_abbrev=False)
@@ -57,22 +58,36 @@ elif args.a == 'delete':
         print("Please specify service of the password you wish to delete")
     cp.to_encrypted(manager,password=password,path = 'vault/vault.crypt')
     print(manager)
-elif args.a== 'modify':
+elif args.a == 'modify':
     if args.service is not None:
         mod_index = manager.index[manager['Service'] == args.service].to_list()
-        if args.password is not None:
-            manager.at[mod_index[0],createKey(args.password)]
-        if args.username is not None:
-            manager.at[mod_index[0],args.username]
-        if args.notes is not None:
-            manager.at[mod_index[0],args.notes]
+        if mod_index:
+            if args.username is not None:
+                manager.at[mod_index[0],'Username'] = args.username
+            if args.password is not None:
+                manager.at[mod_index[0],'Password'] = args.password
+            if args.notes is not None:
+                manager.at[mod_index[0],'Notes'] = args.notes
+        else:
+            print("entry not found,please try again")
     else:
-        print("Please specify which service for which you wish to modify")
+            print("Please specify which service for which you wish to modify")
     cp.to_encrypted(manager,password=password,path = 'vault/vault.crypt')
 elif args.a == 'search':
-    pass
+    row_retrevied = manager.index[manager['Service'] == args.service].to_list()
+    if row_retrevied:
+        print(manager.iloc[row_retrevied[0]])
+        reveal_pass = input("Do you wish to view your password?(y/n)")
+        if reveal_pass.lower() == 'y':
+            with open("config/auth.json",'r') as key_file:
+                key = json.load(key_file)
+            cipher = Fernet(key['key'].encode())
+            print(cipher.decrypt(manager.at[row_retrevied[0],'Password']).decode())
+    else:
+        print('Service not found,please try again')
 elif args.a == 'view':
-    pass
+    for index,row in manager.iterrows():
+        print(f"Service: {row['Service']}, Username: {row['Username']}, Password: {row['Password']}, Notes: {row['Notes']}")
 elif args.a == 'generate':
     length = input("How long would you like your password to be: ")
     if length < 1 :
