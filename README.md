@@ -1,7 +1,7 @@
 # Password_Manager
 This is a Password Manager with a CLI interface that is created with Python. It uses security techniques like salts, hashing and encryption keys.
 
-## How it works
+## ✅ How It Works
     1. User picks from 7 avaliable actions
         1. help - gives user list of possible actions
         2. add - adds password to password manager
@@ -13,9 +13,12 @@ This is a Password Manager with a CLI interface that is created with Python. It 
     2. Prompts user for master password or creates one for first time users.  Also a Dataframe is created and stored in vault/vault.crypt if it does not already exist. Master password is stored so that dataframe can be encrypted.
     3. Master password is hashed with a randomly generated salt using bcrypt and stored in config/auth.json
     4. User chooses an action from list in step 1.
-    5. Once action has been completed the program exists
+    5. Once action has been completed the program exits
 
-## Features to Add
-    1. Allow user to complete multiple actions in one session
-    2. Build out the UI(Details still unknown)
-    3. Add some more checks and security features
+## 🔨 Features to Add
+    1. Allow user to complete multiple actions in one session.
+    2. Build a more interactive UI.
+    3. General improvements.
+
+## ⚠️ Disclamer
+    This project was purely created as a way for me to show my learning. Please do not use this to store senstive information.
