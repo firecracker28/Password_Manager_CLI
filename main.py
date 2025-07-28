@@ -42,7 +42,7 @@ if data["hash"] == '':
     manager = pd.DataFrame(columns=['Service','Username','Password','Notes'])
 else:
     master = getpass("Please enter your master password: ")
-    if( not login(getpass("Please enter your master password: "))):
+    if( not login(master)):
         print("Authentication failed please try again")
         sys.exit()
     manager = cp.read_encrypted(path ='vault/vault.crypt',password=master)
