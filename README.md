@@ -15,10 +15,5 @@ This is a Password Manager with a CLI interface that is created with Python. It 
     4. User chooses an action from list in step 1.
     5. Once action has been completed the program exits
 
-## 🔨 Features to Add
-    1. Allow user to complete multiple actions in one session.
-    2. Build a more interactive UI.
-    3. I am also open to any suggestions.
-
 ## ⚠️ Disclamer
     This project was purely created as a way for me to show my learning. Please do not use this to store senstive information.
